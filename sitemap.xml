@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://yizero10.github.io/about/index.html</loc>
+    
+    <lastmod>2020-11-06T05:55:01.290Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://yizero10.github.io/2020/08/04/%E5%85%B3%E4%BA%8E%E9%95%BF%E6%B2%99/</loc>
     
-    <lastmod>2020-11-06T05:35:26.934Z</lastmod>
+    <lastmod>2020-11-06T05:51:49.048Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>https://yizero10.github.io/2020/07/09/%E5%85%B3%E4%BA%8E%E5%8D%97%E4%BA%AC/</loc>
     
     <lastmod>2020-07-10T11:51:10.144Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://yizero10.github.io/about/index.html</loc>
-    
-    <lastmod>2020-03-27T19:23:00.000Z</lastmod>
     
   </url>
   
