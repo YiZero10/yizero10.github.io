@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-18-22-07-18-22-07-18-22-watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxMTAzNDk1,size_16,color_FFFFFF,t_70-20210718221929142.png">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-18-22-07-18-21-image-20210718211455600-20210718221946316.png">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-18-22-07-18-22-zHeHYXn3OAFvwoGevOfJJAylo8llvS8W_YJX6LP3yp2PP_lJy-4vs-5qPdReqM-JHYAFf6TD4N_WtjpGCUAyljrgawg3UZ7idXWsSEgKI1VKO0yLI6-OI4AHwIY-20210718221946340.jpeg">
-<meta property="og:updated_time" content="2021-07-21T13:55:45.167Z">
+<meta property="og:updated_time" content="2021-07-22T12:58:23.064Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统知识点汇总">
 <meta name="twitter:description" content="操作系统的常考知识点的简单整理，不含例题，例题可以在GitHub内下载往年试卷练习">
@@ -79,8 +79,8 @@
   </style>
 </noscript>
 
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"><link rel="alternate" href="/atom.xml" title="Zero's Blog" type="application/atom+xml">
-</head>
+<link rel="alternate" href="/atom.xml" title="Zero's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -311,6 +311,23 @@
 <li>引入目的：为了更好的使用多道程序并发执行，提高资源利用率和系统吞吐量</li>
 <li>特点：是程序执行的最小单位，基本不拥有任何系统资源（调度的基本单位）‘’资源分配的基本单位还是进程）</li>
 <li>线程属于某一个进程，并与进程内的其他线程一起共享进程的资源</li>
+</ul>
+</li>
+<li><p>进程和线程的区别</p>
+<p>线程具有许多传统进程所具有的特征，故又称为轻型进程(Light—Weight Process)或进程元；而把传统的进程称为重型进程(Heavy—Weight Process)，它相当于只有一个线程的任务。在引入了线程的操作系统中，通常一个进程都有若干个线程，至少包含一个线程。</p>
+<ul>
+<li><p>根本区别：进程是操作系统资源分配的基本单位，而线程是处理器任务调度和执行的基本单位</p>
+</li>
+<li><p>资源开销：每个进程都有独立的代码和数据空间（程序上下文），程序之间的切换会有较大的开销；线程可以看做轻量级的进程，同一类线程共享代码和数据空间，每个线程都有自己独立的运行栈和程序计数器（PC），线程之间切换的开销小。</p>
+</li>
+<li><p>包含关系：如果一个进程内有多个线程，则执行过程不是一条线的，而是多条线（线程）共同完成的；线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。</p>
+</li>
+<li><p>内存分配：同一进程的线程共享本进程的地址空间和资源，而进程之间的地址空间和资源是相互独立的</p>
+</li>
+<li><p>影响关系：一个进程崩溃后，在保护模式下不会对其他进程产生影响，但是一个线程崩溃整个进程都死掉。所以多进程要比多线程健壮。</p>
+</li>
+<li><p>执行过程：每个独立的进程有程序运行的入口、顺序执行序列和程序出口。但是线程不能独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制，两者均可并发执行</p>
+</li>
 </ul>
 </li>
 </ol>
@@ -973,6 +990,8 @@
         
 
         
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
 
 <div class="copyright">
   
