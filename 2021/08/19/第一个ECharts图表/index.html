@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ECharts入门，绘制一个简单的可视化图表">
+<meta name="keywords" content="ECharts,可视化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一个ECharts图表">
+<meta property="og:url" content="https://yizero10.github.io/2021/08/19/第一个ECharts图表/index.html">
+<meta property="og:site_name" content="Zero&#39;s Blog">
+<meta property="og:description" content="ECharts入门，绘制一个简单的可视化图表">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-15-image-20210819155509334.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-16-image-20210819161731813.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-17-image-20210819170230683.png">
+<meta property="og:updated_time" content="2021-08-19T09:08:14.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第一个ECharts图表">
+<meta name="twitter:description" content="ECharts入门，绘制一个简单的可视化图表">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-15-image-20210819155509334.png">
+
+<link rel="canonical" href="https://yizero10.github.io/2021/08/19/第一个ECharts图表/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>第一个ECharts图表 | Zero's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Zero's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Zero's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/2021/08/19/第一个ECharts图表/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Zero Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zero's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第一个ECharts图表<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/第一个ECharts图表.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-08-19 15:14:43" itemprop="dateCreated datePublished" datetime="2021-08-19T15:14:43+08:00">2021-08-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/可视化/" itemprop="url" rel="index"><span itemprop="name">可视化</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">ECharts入门，绘制一个简单的可视化图表</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、获取ECharts"><a href="#一、获取ECharts" class="headerlink" title="一、获取ECharts"></a>一、获取ECharts</h2><ul>
+<li><p>从 <a href="https://echarts.apache.org/zh/download.html" target="_blank" rel="noopener">Apache ECharts 官网下载界面</a> 获取官方源码包后构建。</p>
+</li>
+<li><p>在 ECharts 的 <a href="https://github.com/apache/echarts/releases" target="_blank" rel="noopener">GitHub</a> 获取。</p>
+</li>
+<li><p>在打包环境中，通过 npm 获取 echarts，<code>npm install echarts --save</code></p>
+<ul>
+<li><p>引入ECharts</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> echarts <span class="token keyword">from</span> <span class="token string">'echarts'</span><span class="token punctuation">;</span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="二、v5-升级重要更改"><a href="#二、v5-升级重要更改" class="headerlink" title="二、v5 升级重要更改"></a>二、v5 升级重要更改</h2><ol>
+<li><p>引用更改</p>
+<p>不再支持default exports，需用用如下的引入方式：</p>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> echarts <span class="token keyword">from</span> <span class="token string">'echarts'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 按需引入</span>
+<span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> echarts <span class="token keyword">from</span> <span class="token string">'echarts/lib/echarts'</span><span class="token punctuation">;</span></code></pre>
+</li>
+<li><p>按需引入</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。</span>
+<span class="token keyword">import</span> <span class="token operator">*</span> <span class="token keyword">as</span> echarts <span class="token keyword">from</span> <span class="token string">'echarts/core'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 引入柱状图图表，图表后缀都为 Chart</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> BarChart <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'echarts/charts'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 引入提示框，标题，直角坐标系组件，组件后缀都为 Component</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> GridComponent <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'echarts/components'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 注意，新的接口中默认不再包含 Canvas 渲染器，需要显示引入，如果需要使用 SVG 渲染模式则使用 SVGRenderer，这一步引入是必须的</span>
+<span class="token keyword">import</span> <span class="token punctuation">{</span> CanvasRenderer <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'echarts/renderers'</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// 注册必须的组件</span>
+echarts<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token punctuation">[</span>BarChart<span class="token punctuation">,</span> GridComponent<span class="token punctuation">,</span> CanvasRenderer<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 接下来的使用就跟之前一样，初始化图表，设置配置项</span>
+<span class="token comment" spellcheck="true">// 基于准备好的dom，初始化echarts实例</span>
+<span class="token keyword">var</span> myChart <span class="token operator">=</span> echarts<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'main'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+myChart<span class="token punctuation">.</span><span class="token function">setOption</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+</li>
+</ol>
+<p>其他的配置项调整可以参照<a href="https://echarts.apache.org/zh/tutorial.html#ECharts%205%20%E5%8D%87%E7%BA%A7%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">官方文档指南</a>进行更新</p>
+<h2 id="三、用Option描述图表"><a href="#三、用Option描述图表" class="headerlink" title="三、用Option描述图表"></a>三、用Option描述图表</h2><p>Option是一个大的js对象，里面可以声明一张图表的各个组件，从而满足我们对图表的各种需求。也就是Option描述了<strong>数据</strong>、<strong>数据如何映射成图形</strong>、<strong>交互行为</strong>。</p>
+<h3 id="3-1-组件"><a href="#3-1-组件" class="headerlink" title="3.1 组件"></a>3.1 组件</h3><p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-15-image-20210819155509334.png" alt="image-20210819155509334"></p>
+<p>上图描述了Option中声明了图中出现的各个组件，能帮助我们更清晰的理解每个组件配置项。</p>
+<p>echats中的基本组件有：<a href="https://echarts.apache.org/zh/option.html#xAxis" target="_blank" rel="noopener">xAxis</a>（直角坐标系 X 轴）、<a href="https://echarts.apache.org/zh/option.html#yAxis" target="_blank" rel="noopener">yAxis</a>（直角坐标系 Y 轴）、<a href="https://echarts.apache.org/zh/option.html#grid" target="_blank" rel="noopener">grid</a>（直角坐标系底板）、<a href="https://echarts.apache.org/zh/option.html#angleAxis" target="_blank" rel="noopener">angleAxis</a>（极坐标系角度轴）、<a href="https://echarts.apache.org/zh/option.html#radiusAxis" target="_blank" rel="noopener">radiusAxis</a>（极坐标系半径轴）、<a href="https://echarts.apache.org/zh/option.html#polar" target="_blank" rel="noopener">polar</a>（极坐标系底板）、<a href="https://echarts.apache.org/zh/option.html#geo" target="_blank" rel="noopener">geo</a>（地理坐标系）、<a href="https://echarts.apache.org/zh/option.html#dataZoom" target="_blank" rel="noopener">dataZoom</a>（数据区缩放组件）、<a href="https://echarts.apache.org/zh/option.html#visualMap" target="_blank" rel="noopener">visualMap</a>（视觉映射组件）、<a href="https://echarts.apache.org/zh/option.html#tooltip" target="_blank" rel="noopener">tooltip</a>（提示框组件）、<a href="https://echarts.apache.org/zh/option.html#toolbox" target="_blank" rel="noopener">toolbox</a>（工具栏组件）、<a href="https://echarts.apache.org/zh/option.html#series" target="_blank" rel="noopener">series</a>（系列）、…</p>
+<p>其中，series表示的是一组要表示的数据，该图中有两组，一组用折线图表示，一组是用柱状图表示。</p>
+<h3 id="3-2-组件的定位"><a href="#3-2-组件的定位" class="headerlink" title="3.2 组件的定位"></a>3.2 组件的定位</h3><ul>
+<li><p>基于<code>top</code> / <code>right</code> / <code>down</code> / <code>left</code> / <code>width</code> / <code>height</code> 绝对定位</p>
+<ul>
+<li>绝对定位是基于我们设置的eCharts容器的DOM节点</li>
+<li>每个值可以是<strong>绝对数值</strong>或基于eCharts容器宽高的<strong>百分比</strong></li>
+</ul>
+<p>下图是对<code>grid</code>组件（坐标系的底板）的设置达到的效果</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-16-image-20210819161731813.png" alt="image-20210819161731813"></p>
+</li>
+<li><p>中心半径定位</p>
+<p>如pie、sunburst 、polar，这些圆形的组件或系列用中心半径定位。</p>
+<ul>
+<li>一般是依据<code>center</code>(中心)和<code>radius</code>(半径)来决定为止</li>
+</ul>
+</li>
+</ul>
+<h2 id="四、第一张ECharts图表"><a href="#四、第一张ECharts图表" class="headerlink" title="四、第一张ECharts图表"></a>四、第一张ECharts图表</h2><p>这是截止8.19日近期部分地区本土现有病例的柱状图。</p>
+<p>我是拿腾讯新闻里国内疫情情况的json数据，通过处理</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/08-19-17-image-20210819170230683.png" alt="image-20210819170230683"></p>
+<pre class=" language-javascript"><code class="language-javascript">    <span class="token comment" spellcheck="true">//为ECharts准备一个具备大小的DOM</span>
+        <span class="token operator">&lt;</span>div id<span class="token operator">=</span><span class="token string">"main"</span> style<span class="token operator">=</span><span class="token string">"width: 800px; height: 600px"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span>div<span class="token operator">></span>    
+        <span class="token operator">&lt;</span>script type<span class="token operator">=</span><span class="token string">"text/javascript"</span><span class="token operator">></span>
+      <span class="token comment" spellcheck="true">// import * as echarts from "echarts";</span>
+      <span class="token comment" spellcheck="true">// 基于准备好的dom，初始化echarts实例</span>
+      <span class="token keyword">var</span> myChart <span class="token operator">=</span> echarts<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">"main"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// 指定图表的组件配置项和数据</span>
+      <span class="token keyword">var</span> option <span class="token operator">=</span> <span class="token punctuation">{</span>
+        title<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          text<span class="token punctuation">:</span> <span class="token string">"近期部分市本土现有病例"</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        tooltip<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        legend<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"现有确诊病例"</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        xAxis<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          <span class="token comment" spellcheck="true">//这边的数据是从腾讯新闻页面拿的json数据解析出来的数组，过程我就不展开了</span>
+          data<span class="token punctuation">:</span> provinces
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        yAxis<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        series<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">{</span>
+            name<span class="token punctuation">:</span> <span class="token string">"现有确诊病例"</span><span class="token punctuation">,</span>
+            type<span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">,</span>
+            <span class="token comment" spellcheck="true">//这边的数据也是另外解析出来的一个数组</span>
+            data<span class="token punctuation">:</span> data
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// 使用刚指定的配置项和数据显示图表。</span>
+      myChart<span class="token punctuation">.</span><span class="token function">setOption</span><span class="token punctuation">(</span>option<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span></code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/ECharts/" rel="tag"><i class="fa fa-tag"></i> ECharts</a>
+              <a href="/tags/可视化/" rel="tag"><i class="fa fa-tag"></i> 可视化</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/21/计算机网络知识点汇总/" rel="prev" title="计算机网络知识点汇总">
+      <i class="fa fa-chevron-left"></i> 计算机网络知识点汇总
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、获取ECharts"><span class="nav-text">一、获取ECharts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、v5-升级重要更改"><span class="nav-text">二、v5 升级重要更改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、用Option描述图表"><span class="nav-text">三、用Option描述图表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-组件"><span class="nav-text">3.1 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-组件的定位"><span class="nav-text">3.2 组件的定位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、第一张ECharts图表"><span class="nav-text">四、第一张ECharts图表</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zero Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Zero Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.ren/" title="https://qingyou.ren/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://0xfaner.github.io/" title="https://0xfaner.github.io/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://zaiyewujiang.cn/" title="https://zaiyewujiang.cn/" rel="noopener" target="_blank">TinyHuang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
