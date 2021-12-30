@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="关于redis的bitmap的一些命令说明以及一些使用场景">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis之BitMap">
+<meta property="og:url" content="https://yizero10.github.io/posts/1536016721/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="关于redis的bitmap的一些命令说明以及一些使用场景">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-22T18:05:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis之BitMap">
+<meta name="twitter:description" content="关于redis的bitmap的一些命令说明以及一些使用场景">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/1536016721/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Redis之BitMap | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/1536016721/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis之BitMap<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/Redis֮BitMap.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-23 01:04:48" itemprop="dateCreated datePublished" datetime="2020-03-23T01:04:48+08:00">2020-03-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">关于redis的bitmap的一些命令说明以及一些使用场景</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="redis的bitmap">Redis的BitMap</h3>
+<h4 id="前言">前言</h4>
+<ul>
+<li>通过一个bit位来表示某个元素对应的值或者状态，其中的key就是对应元素本身</li>
+<li>版本：redis 2.2.0</li>
+<li>新增 setbit,getbit,bitcount几个bitmap相关命令</li>
+</ul>
+<h4 id="setbit命令说明">setbit命令说明</h4>
+<p>指令 <code>setbit key offset value</code></p>
+<ul>
+<li>复杂度o(1)</li>
+<li>设置或者清空key的取决于value(字符串)在offset处的bit值(只能只0或者1)</li>
+<li>字符串会进行伸展(grown)以确保它可以将value 保存在指定的偏移量上。当字符串值进行伸展时，空白位置以 0 填充。</li>
+<li>offset参数必须大于或等于0，小于2^32</li>
+<li><strong>返回值</strong> 字符串值指定偏移量上原来存储的位（bit)</li>
+</ul>
+<h4 id="getbit命令说明">getbit命令说明</h4>
+<p>指令<code>getbit key offest</code></p>
+<ul>
+<li>对 <code>key</code> 所储存的字符串值，获取指定偏移量上的位(bit)。</li>
+<li>当 <code>offset</code> 比字符串值的长度大，或者 <code>key</code> 不存在时，返回 <code>0</code></li>
+<li><strong>返回值</strong> 字符串指定偏移量上的位</li>
+</ul>
+<h4 id="bitcount命令说明">bitcount命令说明</h4>
+<p>指令<code>bitcount key</code>、<code>bitcount key start end</code></p>
+<ul>
+<li>计算给定字符串中，被设置为1的比特位的数量</li>
+<li>一般情况下，给定的整个字符串都会被进行计数，通过指定额外的 <code>start</code> 或 <code>end</code> 参数，可以让计数只在特定的位上进行</li>
+<li><code>start</code> 和 <code>end</code> 参数的设置和 <code>GETRANGE</code> 命令类似，都可以使用负数值： 比如 <code>-1</code> 表示最后一个字节， <code>-2</code>表示倒数第二个字节，以此类推</li>
+<li>不存在的 <code>key</code> 被当成是空字符串来处理，因此对一个不存在的 <code>key</code> 进行 <code>BITCOUNT</code> 操作，结果为 0。</li>
+<li><strong>返回值</strong> 被设置为1的位的数量</li>
+</ul>
+<h4 id="使用场景">使用场景</h4>
+<h5 id="用户签到">1. 用户签到</h5>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Jedis redis = <span class="keyword">new</span> Jedis(<span class="string">"192.168.31.89"</span>,<span class="number">6379</span>,<span class="number">100000</span>);</span><br><span class="line"><span class="comment">//用户uid</span></span><br><span class="line">String uid = <span class="string">"1"</span>;</span><br><span class="line">String cacheKey = <span class="string">"sign_"</span>+Integer.valueOf(uid);</span><br><span class="line"><span class="comment">//记录有uid的key</span></span><br><span class="line"><span class="comment">// $cacheKey = sprintf("sign_%d", $uid);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//开始有签到功能的日期</span></span><br><span class="line">String startDate = <span class="string">"2017-01-01"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//今天的日期</span></span><br><span class="line">String todayDate = <span class="string">"2017-01-21"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//计算offset(时间戳)</span></span><br><span class="line"><span class="keyword">long</span> startTime = dateParase(startDate,<span class="string">"yyyy-MM-dd"</span>).getTime();</span><br><span class="line"><span class="keyword">long</span> todayTime = dateParase(todayDate,<span class="string">"yyyy-MM-dd"</span>).getTime();</span><br><span class="line"><span class="keyword">long</span> offset = (<span class="keyword">long</span>) Math.floor((todayTime - startTime) / <span class="number">86400</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"今天是第"</span>+offset+<span class="string">"天"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//签到</span></span><br><span class="line"><span class="comment">//一年一个用户会占用多少空间呢？大约365/8=45.625个字节，好小，有木有被惊呆？</span></span><br><span class="line">redis.setbit(cacheKey,offset,<span class="string">"1"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//查询签到情况</span></span><br><span class="line"><span class="keyword">boolean</span> bitStatus = redis.getbit(cacheKey, offset);</span><br><span class="line"><span class="comment">//判断是否已经签到</span></span><br><span class="line"><span class="comment">//计算总签到次数</span></span><br><span class="line"><span class="keyword">long</span> qdCount = redis.bitcount(cacheKey);</span><br></pre></td></tr></table></figure>
+<h5 id="统计活跃用户">2. 统计活跃用户</h5>
+<p>使用时间作为cacheKey，然后用户ID为offset，如果当日活跃过就设置为1 那么我该如果计算某几天/月/年的活跃用户呢(暂且约定，统计时间内只有有一天在线就称为活跃)</p>
+<p><strong>一个新的命令</strong> <code>BITOP operation destkey key [key ...]</code></p>
+<p><strong>说明</strong> ：</p>
+<ol type="1">
+<li>对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上</li>
+<li>BITOP 命令支持 AND 、 OR 、 NOT 、 XOR 这四种操作中的任意一种参数</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String,List&lt;Integer&gt;&gt;dateActiveuser = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">Jedis redis = <span class="keyword">new</span> Jedis(<span class="string">"192.168.31.89"</span>,<span class="number">6379</span>,<span class="number">100000</span>);</span><br><span class="line">Integer[] temp01 = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>&#125;;</span><br><span class="line">List&lt;Integer&gt;temp01List = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Collections.addAll(temp01List,temp01);</span><br><span class="line">dateActiveuser.put(<span class="string">"2017-01-10"</span>,temp01List);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Integer[] temp02 = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>&#125;;</span><br><span class="line">List&lt;Integer&gt;temp02List = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Collections.addAll(temp02List,temp02);</span><br><span class="line">dateActiveuser.put(<span class="string">"2017-01-11"</span>,temp02List);</span><br><span class="line"></span><br><span class="line">Integer[] temp03 = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">List&lt;Integer&gt;temp03List = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Collections.addAll(temp03List,temp03);</span><br><span class="line">dateActiveuser.put(<span class="string">"2017-01-12"</span>,temp03List);</span><br><span class="line"></span><br><span class="line">Integer[] temp04 = &#123;<span class="number">1</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">List&lt;Integer&gt;temp04List = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Collections.addAll(temp04List,temp04);</span><br><span class="line">dateActiveuser.put(<span class="string">"2017-01-13"</span>,temp04List);</span><br><span class="line"></span><br><span class="line">Integer[] temp05 = &#123;<span class="number">1</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">List&lt;Integer&gt;temp05List = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Collections.addAll(temp05List,temp05);</span><br><span class="line">dateActiveuser.put(<span class="string">"2017-01-14"</span>,temp05List);</span><br><span class="line"></span><br><span class="line">String date[] = &#123;<span class="string">"2017-01-10"</span>,<span class="string">"2017-01-11"</span>,<span class="string">"2017-01-12"</span>,<span class="string">"2017-01-13"</span>,<span class="string">"2017-01-14"</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//测试数据放入redis中</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;date.length;i++)&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;dateActiveuser.get(date[i]).size();j++)&#123;</span><br><span class="line">        redis.setbit(date[i], dateActiveuser.get(date[i]).get(j), <span class="string">"1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//bitOp</span></span><br><span class="line">redis.bitop(BitOP.AND, <span class="string">"stat"</span>, <span class="string">"stat_2017-01-10"</span>, <span class="string">"stat_2017-01-11"</span>,<span class="string">"stat_2017-01-12"</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"总活跃用户："</span>+redis.bitcount(<span class="string">"stat"</span>));</span><br><span class="line"></span><br><span class="line">redis.bitop(BitOP.AND, <span class="string">"stat1"</span>, <span class="string">"stat_2017-01-10"</span>, <span class="string">"stat_2017-01-11"</span>,<span class="string">"stat_2017-01-14"</span>);</span><br><span class="line">System.out.println(<span class="string">"总活跃用户："</span>+redis.bitcount(<span class="string">"stat1"</span>));</span><br><span class="line"></span><br><span class="line">redis.bitop(BitOP.AND, <span class="string">"stat2"</span>, <span class="string">"stat_2017-01-10"</span>, <span class="string">"stat_2017-01-11"</span>);</span><br><span class="line">System.out.println(<span class="string">"总活跃用户："</span>+redis.bitcount(<span class="string">"stat2"</span>));</span><br></pre></td></tr></table></figure>
+<p>假设当前站点有5000W用户，那么一天的数据大约为50000000/8/1024/1024=6MB</p>
+<h5 id="用户在线状态">3. 用户在线状态</h5>
+<p>前段时间开发一个项目，对方给我提供了一个查询当前用户是否在线的接口。不了解对方是怎么做的，自己考虑了一下，使用bitmap是一个节约空间效率又高的一种方法，只需要一个key，然后用户ID为offset，如果在线就设置为1，不在线就设置为0，和上面的场景一样，5000W用户只需要6MB的空间。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//批量设置在线状态</span></span><br><span class="line">$uids = range(<span class="number">1</span>, <span class="number">500000</span>);</span><br><span class="line"><span class="keyword">foreach</span>($uids <span class="keyword">as</span> $uid) &#123;</span><br><span class="line">$redis-&gt;setBit(<span class="string">'online'</span>, $uid, $uid % <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//一个一个获取状态</span></span><br><span class="line">$uids = range(<span class="number">1</span>, <span class="number">500000</span>);</span><br><span class="line">$startTime = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="keyword">foreach</span>($uids <span class="keyword">as</span> $uid) &#123;</span><br><span class="line"><span class="keyword">echo</span> $redis-&gt;getBit(<span class="string">'online'</span>, $uid) . PHP_EOL;</span><br><span class="line">&#125;</span><br><span class="line">$endTime = microtime(<span class="keyword">true</span>);</span><br><span class="line"><span class="comment">//在我的电脑上，获取50W个用户的状态需要25秒</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"total:"</span> . ($endTime - $startTime) . <span class="string">"s"</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 对于批量的获取，上面是一种效率低的办法，实际可以通过get获取到value，然后自己计算 </span></span><br><span class="line"><span class="comment">* 具体计算方法改天再写吧，之前写的代码找不见了。。。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i> Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/3903106024/" rel="prev" title="周报0316~0322">
+      <i class="fa fa-chevron-left"></i> 周报0316~0322
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/1820613907/" rel="next" title="初识微服务">
+      初识微服务 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis的bitmap"><span class="nav-text">Redis的BitMap</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#setbit命令说明"><span class="nav-text">setbit命令说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getbit命令说明"><span class="nav-text">getbit命令说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bitcount命令说明"><span class="nav-text">bitcount命令说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用场景"><span class="nav-text">使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#用户签到"><span class="nav-text">1. 用户签到</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#统计活跃用户"><span class="nav-text">2. 统计活跃用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#用户在线状态"><span class="nav-text">3. 用户在线状态</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.ren/" title="https://qingyou.ren/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://0xfaner.github.io/" title="https://0xfaner.github.io/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
