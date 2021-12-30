@@ -9,6 +9,20 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
 
 <link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
@@ -19,7 +33,7 @@
   </script>
 
   <meta name="description" content="计算机网络常考知识点的简单整理，不含例题。">
-<meta name="keywords" content="期末紧急复习,计算机网络">
+<meta name="keywords" content="计算机网络,知识点复习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机网络知识点汇总">
 <meta property="og:url" content="https://yizero10.github.io/posts/2479963823/index.html">
@@ -51,7 +65,7 @@
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-22-14-07-22-14-watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3ODY1OTk2,size_16,color_FFFFFF,t_70-20210722144003643.jpeg">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-22-14-07-22-14-watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3ODY1OTk2,size_16,color_FFFFFF,t_70-20210722144236408.jpeg">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-22-14-07-22-14-watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3ODY1OTk2,size_16,color_FFFFFF,t_70-20210722144706754.jpeg">
-<meta property="og:updated_time" content="2021-08-19T14:01:39.194Z">
+<meta property="og:updated_time" content="2021-12-30T06:49:28.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机网络知识点汇总">
 <meta name="twitter:description" content="计算机网络常考知识点的简单整理，不含例题。">
@@ -101,9 +115,9 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
-</head>
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -1189,8 +1203,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/期末紧急复习/" rel="tag"><i class="fa fa-tag"></i> 期末紧急复习</a>
               <a href="/tags/计算机网络/" rel="tag"><i class="fa fa-tag"></i> 计算机网络</a>
+              <a href="/tags/知识点复习/" rel="tag"><i class="fa fa-tag"></i> 知识点复习</a>
           </div>
 
         
@@ -1294,7 +1308,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

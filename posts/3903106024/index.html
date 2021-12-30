@@ -9,6 +9,20 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
 
 <link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
@@ -27,7 +41,7 @@
 <meta property="og:description" content="3.16~3.22一周的总结(踩坑记录)以及下周的规划">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://www.yunforum.net/uploadfile/editor/0/2/2808.png">
-<meta property="og:updated_time" content="2020-03-23T12:12:34.000Z">
+<meta property="og:updated_time" content="2021-12-30T06:41:20.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="周报0316~0322">
 <meta name="twitter:description" content="3.16~3.22一周的总结(踩坑记录)以及下周的规划">
@@ -77,9 +91,9 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
-</head>
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -376,7 +390,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

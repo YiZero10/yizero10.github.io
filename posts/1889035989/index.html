@@ -9,6 +9,20 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
 
 <link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
@@ -35,7 +49,7 @@
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-09-19-Snapseed.jpg">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-09-19-IMG_4302.JPG">
 <meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/07-09-20-07-09-20-3CAB4AD5-A7E7-4181-AAC4-3EA79319DDD8.JPEG">
-<meta property="og:updated_time" content="2021-07-18T14:39:06.446Z">
+<meta property="og:updated_time" content="2021-12-30T06:41:20.470Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于南京">
 <meta name="twitter:description" content="吐血整理亲身体验的南京小攻略，陆续更新……">
@@ -85,9 +99,9 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
 <link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"><link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
-</head>
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
   <div class="container use-motion">
@@ -531,7 +545,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
