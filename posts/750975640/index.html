@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一些算法的模板，持续更新……">
+<meta name="keywords" content="LeetCode,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法模板">
+<meta property="og:url" content="https://yizero10.github.io/posts/750975640/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="一些算法的模板，持续更新……">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-21-15-template_diagram.png">
+<meta property="og:updated_time" content="2022-11-22T14:02:59.451Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法模板">
+<meta name="twitter:description" content="一些算法的模板，持续更新……">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-21-15-template_diagram.png">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/750975640/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>算法模板 | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/750975640/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          算法模板<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/算法模板.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-10-30 17:19:45" itemprop="dateCreated datePublished" datetime="2022-10-30T17:19:45+08:00">2022-10-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">一些算法的模板，持续更新……</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="广度优先搜索bfs">1. 广度优先搜索BFS</h2>
+<p>数据结构：Queue队列</p>
+<p>使用广度优先搜索（ BFS ）的两个主要方案：<code>遍历</code>或<code>找出最短路径</code>，通常发生在树或图中。</p>
+<p>在特定问题中执行 BFS 之前确定结点和边缘非常重要。通常，结点将是实际结点或是状态，而边缘将是实际边缘或可能的转换。</p>
+<h3 id="bfs-模板i">1.1 BFS-模板I</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">BFS</span><span class="params">(Node root, Node target)</span> </span>&#123;</span><br><span class="line">    Queue&lt;Node&gt; queue;  <span class="comment">// store all nodes which are waiting to be processed</span></span><br><span class="line">    <span class="keyword">int</span> step = <span class="number">0</span>;       <span class="comment">// number of steps neeeded from root to current node</span></span><br><span class="line">    <span class="comment">// initialize</span></span><br><span class="line">    add root to queue;</span><br><span class="line">    <span class="comment">// BFS</span></span><br><span class="line">    <span class="keyword">while</span> (queue is not empty) &#123;</span><br><span class="line">        step = step + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// iterate the nodes which are already in the queue</span></span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; ++i) &#123;</span><br><span class="line">            Node cur = the first node in queue;</span><br><span class="line">            <span class="keyword">return</span> step <span class="keyword">if</span> cur is target;</span><br><span class="line">            <span class="keyword">for</span> (Node next : the neighbors of cur) &#123;</span><br><span class="line">                add next to queue;</span><br><span class="line">            &#125;</span><br><span class="line">            remove the first node from queue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;          <span class="comment">// there is no path from root to target</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如代码所示，在每一轮中，队列中的结点是等待处理的结点。 在每个更外一层的 while 循环之后，我们距离根结点更远一步。变量 step 指示从根结点到我们正在访问的当前结点的距离</p>
+<h3 id="bfs-模板ii">1.2 BFS-模板II</h3>
+<p>有时，确保我们永远<code>不会访问一个结点两次</code>很重要。否则，我们可能陷入无限循环。</p>
+<p>如果是这样，我们可以在上面的代码中添加一个哈希集<code>used</code>or<code>visited</code>来解决这个问题。这是修改后的伪代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Return the length of the shortest path between root and target node.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">BFS</span><span class="params">(Node root, Node target)</span> </span>&#123;</span><br><span class="line">    Queue&lt;Node&gt; queue;  <span class="comment">// store all nodes which are waiting to be processed</span></span><br><span class="line">    Set&lt;Node&gt; used;     <span class="comment">// store all the used nodes</span></span><br><span class="line">    <span class="keyword">int</span> step = <span class="number">0</span>;       <span class="comment">// number of steps neeeded from root to current node</span></span><br><span class="line">    <span class="comment">// initialize</span></span><br><span class="line">    add root to queue;</span><br><span class="line">    add root to used;</span><br><span class="line">    <span class="comment">// BFS</span></span><br><span class="line">    <span class="keyword">while</span> (queue is not empty) &#123;</span><br><span class="line">        step = step + <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// iterate the nodes which are already in the queue</span></span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; ++i) &#123;</span><br><span class="line">            Node cur = the first node in queue;</span><br><span class="line">            <span class="keyword">return</span> step <span class="keyword">if</span> cur is target;</span><br><span class="line">            <span class="keyword">for</span> (Node next : the neighbors of cur) &#123;</span><br><span class="line">                <span class="keyword">if</span> (next is not in used) &#123;</span><br><span class="line">                    add next to queue;</span><br><span class="line">                    add next to used;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            remove the first node from queue;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;          <span class="comment">// there is no path from root to target</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有两种情况你不需要使用哈希集：</p>
+<ol type="1">
+<li>你完全确定没有循环，例如，在树遍历中；</li>
+<li>你确实希望多次将结点添加到队列中。</li>
+</ol>
+<h2 id="深度优先搜索dfs">2. 深度优先搜索DFS</h2>
+<p>数据结构：Stack栈</p>
+<p>在大多数情况下，我们在能使用 BFS 时也可以使用 DFS。但是有一个重要的区别：<code>遍历顺序</code>。</p>
+<p>与 BFS 不同，<code>更早访问的结点可能不是更靠近根结点的结点</code>。因此，你在 DFS 中找到的第一条路径<code>可能不是最短路径</code>。</p>
+<h3 id="dfs-模板i递归">2.1 DFS-模板I（递归）</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Return true if there is a path from cur to target.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">DFS</span><span class="params">(Node cur, Node target, Set&lt;Node&gt; visited)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span> <span class="keyword">if</span> cur is target;</span><br><span class="line">    <span class="keyword">for</span> (next : each neighbor of cur) &#123;</span><br><span class="line">        <span class="keyword">if</span> (next is not in visited) &#123;</span><br><span class="line">            add next to visted;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">true</span> <span class="keyword">if</span> <span class="title">DFS</span><span class="params">(next, target, visited)</span> </span>== <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们递归地实现 DFS 时，似乎不需要使用任何栈。但实际上，使用的是由系统提供的<strong>隐式栈</strong>，也称为调用栈（<a href="https://en.wikipedia.org/wiki/Call_stack" target="_blank" rel="noopener">Call Stack</a>）。</p>
+<blockquote>
+<p>在上面的模板中，我们在找到<code>第一条</code>路径时停止。</p>
+<p>如果你想找到<code>最短</code>路径呢？</p>
+<p>提示：再添加一个参数来指示你已经找到的最短路径。</p>
+</blockquote>
+<h3 id="dfs-模板ii">2.2 DFS-模板II</h3>
+<p>递归解决方案的优点是它更容易实现。 但是，存在一个很大的缺点：如果递归的深度太高，你将遭受堆栈溢出。 在这种情况下，您可能会希望使用 BFS，或使用显式栈实现 DFS。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Return true if there is a path from cur to target.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">DFS</span><span class="params">(<span class="keyword">int</span> root, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    Set&lt;Node&gt; visited;</span><br><span class="line">    Stack&lt;Node&gt; s;</span><br><span class="line">    add root to s;</span><br><span class="line">    <span class="keyword">while</span> (s is not empty) &#123;</span><br><span class="line">        Node cur = the top element in s;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span> <span class="keyword">if</span> cur is target;</span><br><span class="line">        <span class="keyword">for</span> (Node next : the neighbors of cur) &#123;</span><br><span class="line">            <span class="keyword">if</span> (next is not in visited) &#123;</span><br><span class="line">                add next to s;</span><br><span class="line">                add next to visited;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        remove cur from s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该逻辑与递归解决方案完全相同。 但我们使用 <code>while</code> 循环和<code>栈</code>来模拟递归期间的<code>系统调用栈</code>。</p>
+<h2 id="双指针">3. 双指针</h2>
+<h3 id="情景一">3.1 情景一</h3>
+<p>使用双指针的典型场景之一是你想要：</p>
+<blockquote>
+<p>从两端向中间迭代数组。</p>
+</blockquote>
+<p>这时你可以使用双指针技巧：</p>
+<blockquote>
+<p>一个指针从头部开始，而另一个指针从尾部开始。</p>
+<p>也就是从用一个指针迭代变成用两个指针迭代</p>
+</blockquote>
+<p>这种技巧经常在排序数组中使用。</p>
+<ul>
+<li>一个经典问题：</li>
+</ul>
+<p>反转数组中的元素。比如数组为 ['h', 'e', 'l', 'l', 'o']，反转之后变为 ['o', 'l', 'l', 'e', 'h']。</p>
+<p>使用双指针技巧，其思想是分别将两个指针分别指向数组的开头及末尾，然后将其指向的元素进行交换，再将指针向中间移动一步，继续交换，直到这两个指针相遇。</p>
+<h3 id="情景二">3.2 情景二</h3>
+<p>需要使用双指针技巧的另一种非常常见的情况：</p>
+<blockquote>
+<p>同时有一个慢指针和一个快指针。</p>
+<p>两个指针同方向移动，不同速度。</p>
+<p>可以用来解决：滑动窗口问题</p>
+</blockquote>
+<p>解决这类问题的关键是:</p>
+<blockquote>
+<p>确定两个指针的移动策略。（有时贪心算法有关）</p>
+<p>快指针什么时候移动？ 慢指针什么时候移动？ 快慢指针移动步数时候有联系？</p>
+</blockquote>
+<p>与前一个场景类似，你有时可能需要在使用双指针技巧之前对数组进行排序，也可能需要运用贪心法则来决定你的运动策略。</p>
+<h2 id="二分查找">4. 二分查找</h2>
+<p>二分查找是一种在每次比较之后将查找空间一分为二的算法。每次需要查找集合中的索引或元素时，都应该考虑二分查找。</p>
+<p>如果集合是无序的，我们在应用二分查找之前先对其进行排序。</p>
+<h3 id="二分查找三部分">二分查找三部分</h3>
+<p>二分查找一般由三个主要部分组成：</p>
+<ol type="1">
+<li><p><strong>预处理</strong> —— 如果集合未排序，则进行排序。</p></li>
+<li><p><strong>二分查找</strong> —— 使用循环或递归在每次比较后将查找空间划分为两半。</p></li>
+<li><p><strong>后处理</strong> —— 在剩余空间中确定可行的候选者。</p></li>
+</ol>
+<h3 id="模版i">4.1 模版I</h3>
+<p><strong>场景：</strong>用于查找可以通过<em>访问数组中的<strong>单个索引</strong></em>来确定的元素或条件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span>(left &lt;= right)&#123;</span><br><span class="line">    <span class="comment">// Prevent (left + right) overflow</span></span><br><span class="line">    <span class="comment">// 用减法，防止溢出</span></span><br><span class="line">    <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(nums[mid] == target)&#123; <span class="keyword">return</span> mid; &#125;</span><br><span class="line">    <span class="comment">// target 在右区间，所以[middle + 1, right]</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target) &#123; left = mid + <span class="number">1</span>; &#125;</span><br><span class="line">    <span class="comment">// target 在左区间，所以[left, middle - 1]</span></span><br><span class="line">    <span class="keyword">else</span> &#123; right = mid - <span class="number">1</span>; &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// End Condition: left &gt; right</span></span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始条件：<code>left = 0, right = length-1</code></li>
+<li>终止：<code>left &gt; right</code></li>
+<li>向左查找：<code>right = mid-1</code></li>
+<li>向右查找：<code>left = mid+1</code></li>
+</ul>
+<p><strong>关键属性：</strong></p>
+<ul>
+<li>二分查找的最基础和最基本的形式。</li>
+<li>查找条件可以在不与元素的两侧进行比较的情况下确定（或使用它周围的特定元素）。</li>
+<li>不需要后处理，因为每一步中，你都在检查是否找到了元素。如果到达末尾，则知道未找到该元素。</li>
+</ul>
+<h3 id="模版ii">4.2 模版II</h3>
+<p><strong>场景：</strong>用于查找需要<em>访问数组中<strong>当前索引及其直接右邻居索引</strong></em>的元素或条件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//这边要注意right是数组的长度</span></span><br><span class="line">  <span class="comment">// 定义target在左闭右开的区间里，即：[left, right)</span></span><br><span class="line">  <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 因为left == right的时候，在[left, right)是无效的空间，所以使用 &lt;</span></span><br><span class="line">  <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">    <span class="comment">// Prevent (left + right) overflow</span></span><br><span class="line">    <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(nums[mid] == target)&#123; </span><br><span class="line">      <span class="keyword">return</span> mid; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//  target 在右区间，在[middle + 1, right)中</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target) &#123; </span><br><span class="line">      left = mid + <span class="number">1</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// target 在左区间，在[left, middle)中</span></span><br><span class="line">    <span class="keyword">else</span> &#123; </span><br><span class="line">      right = mid; </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Post-processing:</span></span><br><span class="line">  <span class="comment">// End Condition: left == right</span></span><br><span class="line">  <span class="keyword">if</span>(left != nums.length &amp;&amp; nums[left] == target) <span class="keyword">return</span> left;</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始条件：<code>left = 0, right = length</code></li>
+<li>终止：<code>left == right</code></li>
+<li>向左查找：<code>right = mid</code></li>
+<li>向右查找：<code>left = mid+1</code></li>
+</ul>
+<p><strong>关键属性：</strong></p>
+<ul>
+<li>一种实现二分查找的高级方法。</li>
+<li>查找条件需要访问元素的直接右邻居。</li>
+<li>使用元素的右邻居来确定是否满足条件，并决定是向左还是向右。</li>
+<li>保证查找空间在每一步中至少有 2 个元素。</li>
+<li>需要进行后处理。 当你剩下 1 个元素时，循环 / 递归结束。 需要评估剩余元素是否符合条件。</li>
+</ul>
+<h3 id="模版iii">4.3 模版III</h3>
+<p><strong>场景：</strong>二分查找的另一种独特形式。 用于搜索需要<em>访问<strong>当前索引及其在数组中的直接左右邻居索引</strong></em>的元素或条件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (nums == <span class="keyword">null</span> || nums.length == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 二分查找 --- (left, right)</span></span><br><span class="line">    <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (left + <span class="number">1</span> &lt; right)&#123;</span><br><span class="line">        <span class="comment">// Prevent (left + right) overflow</span></span><br><span class="line">        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &lt; target) &#123;</span><br><span class="line">          	<span class="comment">//  target 在右区间，在(middle, right)中</span></span><br><span class="line">            left = mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          	<span class="comment">// target 在左区间，在(left, middle)中</span></span><br><span class="line">            right = mid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Post-processing:</span></span><br><span class="line">    <span class="comment">// End Condition: left + 1 == right</span></span><br><span class="line">    <span class="keyword">if</span>(nums[left] == target) <span class="keyword">return</span> left;</span><br><span class="line">    <span class="keyword">if</span>(nums[right] == target) <span class="keyword">return</span> right;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始条件：<code>left = 0, right = length-1</code></li>
+<li>终止：<code>left + 1 == right</code></li>
+<li>向左查找：<code>right = mid</code></li>
+<li>向右查找：<code>left = mid</code></li>
+</ul>
+<p><strong>关键属性：</strong></p>
+<ul>
+<li>实现二分查找的另一种方法。</li>
+<li>搜索条件需要访问元素的直接左右邻居。</li>
+<li>使用元素的邻居来确定它是向右还是向左。</li>
+<li>保证查找空间在每个步骤中至少有 3 个元素。</li>
+<li>需要进行后处理。 当剩下 2 个元素时，循环 / 递归结束。 需要评估其余元素是否符合条件。</li>
+</ul>
+<h3 id="模版分析">4.4 模版分析</h3>
+<figure>
+<img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-21-15-template_diagram.png" alt><figcaption>img</figcaption>
+</figure>
+<p>三个模版的区别都用红色标记出来，它们的不同之处在于：</p>
+<ul>
+<li>左、中、右索引的分配。</li>
+<li>循环或递归终止条件。</li>
+<li>后处理的必要性。</li>
+</ul>
+<p>模板 #1 和 #3 是最常用的，几乎所有二分查找问题都可以用其中之一轻松实现。模板 #2 更 高级一些，用于解决某些类型的问题。</p>
+<h4 id="模版-1-left-right">模版 #1 <code>left &lt;= right</code></h4>
+<ul>
+<li>二分查找的最基础和最基本的形式。</li>
+<li>查找条件可以在不与元素的两侧进行比较的情况下确定（或使用它周围的特定元素）。</li>
+<li>不需要后处理，因为每一步中，你都在检查是否找到了元素。如果到达末尾，则知道未找到该元素。</li>
+</ul>
+<h4 id="模版-2-left-right">模版 #2 <code>left &lt; right</code></h4>
+<ul>
+<li>一种实现二分查找的高级方法。</li>
+<li>查找条件需要访问元素的直接右邻居。</li>
+<li>使用元素的右邻居来确定是否满足条件，并决定是向左还是向右。</li>
+<li>保证查找空间在每一步中至少有 2 个元素。</li>
+<li>需要进行后处理。 当你剩下 1 个元素时，循环 / 递归结束。 需要评估剩余元素是否符合条件。</li>
+</ul>
+<h4 id="模版-3-left-1-right">模版 #3 <code>left + 1 &lt; right</code></h4>
+<ul>
+<li>实现二分查找的另一种方法。</li>
+<li>搜索条件需要访问元素的直接左右邻居。</li>
+<li>使用元素的邻居来确定它是向右还是向左。</li>
+<li>保证查找空间在每个步骤中至少有 3 个元素。</li>
+<li>需要进行后处理。 当剩下 2 个元素时，循环 / 递归结束。 需要评估其余元素是否符合条件。</li>
+</ul>
+<p><strong>注：</strong>本篇内容主要来自几本力扣的LeetBook <a href="https://leetcode.cn/leetbook/" target="_blank" rel="noopener">(LeetCode)</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/LeetCode/" rel="tag"><i class="fa fa-tag"></i> LeetCode</a>
+              <a href="/tags/算法/" rel="tag"><i class="fa fa-tag"></i> 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/3204582657/" rel="prev" title="设计模式七大原则">
+      <i class="fa fa-chevron-left"></i> 设计模式七大原则
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/1776793711/" rel="next" title="设计模式-单例模式">
+      设计模式-单例模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#广度优先搜索bfs"><span class="nav-text">1. 广度优先搜索BFS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bfs-模板i"><span class="nav-text">1.1 BFS-模板I</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bfs-模板ii"><span class="nav-text">1.2 BFS-模板II</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度优先搜索dfs"><span class="nav-text">2. 深度优先搜索DFS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dfs-模板i递归"><span class="nav-text">2.1 DFS-模板I（递归）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dfs-模板ii"><span class="nav-text">2.2 DFS-模板II</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双指针"><span class="nav-text">3. 双指针</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#情景一"><span class="nav-text">3.1 情景一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#情景二"><span class="nav-text">3.2 情景二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二分查找"><span class="nav-text">4. 二分查找</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二分查找三部分"><span class="nav-text">二分查找三部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模版i"><span class="nav-text">4.1 模版I</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模版ii"><span class="nav-text">4.2 模版II</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模版iii"><span class="nav-text">4.3 模版III</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模版分析"><span class="nav-text">4.4 模版分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#模版-1-left-right"><span class="nav-text">模版 #1 left &lt;= right</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模版-2-left-right"><span class="nav-text">模版 #2 left &lt; right</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模版-3-left-1-right"><span class="nav-text">模版 #3 left + 1 &lt; right</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.studio/" title="https://qingyou.studio/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.0xfaner.site/" title="https://blog.0xfaner.site/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍设计模式中的组合模式">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式-组合模式">
+<meta property="og:url" content="https://yizero10.github.io/posts/1191195587/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="本文主要介绍设计模式中的组合模式">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-11-29-12-image-20221129124239245.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129124326176.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129125038437.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129125925881.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129142011409.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129145415082.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129145807909.png">
+<meta property="og:updated_time" content="2022-11-29T14:05:32.764Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式-组合模式">
+<meta name="twitter:description" content="本文主要介绍设计模式中的组合模式">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-11-29-12-image-20221129124239245.png">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/1191195587/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>设计模式-组合模式 | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/1191195587/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          设计模式-组合模式<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/设计模式-组合模式.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-29 12:29:15" itemprop="dateCreated datePublished" datetime="2022-11-29T12:29:15+08:00">2022-11-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">本文主要介绍设计模式中的组合模式</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="具体需求">1. 具体需求</h2>
+<p>学校院系展示：</p>
+<p>编写程序展示一个学校院系结构：要在一个页面中展示出学校的院系组成，一个学校有多个学院，一个学院多有个系，如图。</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-11-29-12-image-20221129124239245.png" alt="image-20221129124239245" style="zoom:50%;"></p>
+<h2 id="传统解决方式">2. 传统解决方式</h2>
+<p>1）类图（继承关系）</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129124326176.png" alt="image-20221129124326176" style="zoom:50%;"></p>
+<p>2）问题分析</p>
+<ul>
+<li>继承关系，将学院看作是学校的子类，系是学院的子类，这样实际上是站在组织大小来进行分层次的</li>
+<li>实际上我们的要求是：在一个页面中展示出学校的院系组成，一个学校有多个学院，一个学院有多个系，因此这种方案，不能很好的实现管理的操作，比如对学院、系的增删改查等</li>
+<li>解决方案：把学校、学院、系都看作是组织结构，他们之间没有继承关系，而是一种树形结构，可以更好的实现管理操作——&gt;<strong>组合模式</strong></li>
+</ul>
+<h2 id="组合模式解决方式">3. 组合模式解决方式</h2>
+<h3 id="基本介绍">3.1 基本介绍</h3>
+<p>1）组合模式（Composite Pattern），又叫部分整体模式，它创建了对象组的树形结构，将对象组合成树状结构以表示<strong>“整体-部分”</strong>的层次关系。</p>
+<p>2）组合模式依据树形结构来组合对象，用来表示部分以及整体层次。</p>
+<p>3）这种类型的设计模式属于<strong>结构型模式</strong>。</p>
+<p>4）组合模式使得用户<strong>对单个对象和组合对象的访问具有一致性</strong>，即：组合能让客户以一致的方式处理个别对象以及组合对象。</p>
+<h3 id="原理及角色">3.2 原理及角色</h3>
+<p>1）类图</p>
+<figure>
+<img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129125038437.png" alt><figcaption>image-20221129125038437</figcaption>
+</figure>
+<p>2）角色及职责</p>
+<ul>
+<li><strong>Component</strong>：这是组合中对象声明接口，在适当情况下，实现所有类共有的接口默认行为，用于访问和管理Component子部件（子类），Component可以是抽象类或者接口。</li>
+<li><strong>Leaf</strong>：在组合中表示叶子节点，叶子节点没有子节点（被管理）</li>
+<li><strong>Composite</strong>：非叶子节点，用于存储子部件，在Component接口中实现子部件的相关操作，比如增加（add）、删除……（管理者）</li>
+</ul>
+<p>3）组合模式解决的问题</p>
+<ul>
+<li><p>组合模式解决这样的问题，当我们要处理的对象可以生成一颗树形结构，而我们要对树上的节点和叶子节点进行操作时，它能够提供一致的方式，而不用考虑它是节点还是叶子</p></li>
+<li><p>示意图</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-12-image-20221129125925881.png" alt="image-20221129125925881" style="zoom:50%;"></p></li>
+</ul>
+<h3 id="应用实例">3.3 应用实例</h3>
+<p>用组合模式实现学校院系展示</p>
+<p>1）思路分析</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129142011409.png" alt="image-20221129142011409" style="zoom:50%;"></p>
+<p>2）代码示例</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">OrganizationComponent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String des;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OrganizationComponent</span><span class="params">(String name, String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.des = des;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="comment">//默认实现</span></span><br><span class="line">        <span class="comment">//为什么不写成抽象？因为有一些子类不需要实现所有方法</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="comment">//默认实现</span></span><br><span class="line">        <span class="comment">//为什么不写成抽象？因为有一些子类不需要实现所有方法</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnsupportedOperationException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> des;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDes</span><span class="params">(String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.des = des;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//学校，非叶子节点Composite，可以管理College</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">University</span> <span class="keyword">extends</span> <span class="title">OrganizationComponent</span></span>&#123;</span><br><span class="line">    List&lt;OrganizationComponent&gt; colleges = <span class="keyword">new</span> LinkedList&lt;OrganizationComponent&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">University</span><span class="params">(String name, String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name, des);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//重写add方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.colleges.add(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.colleges.remove(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//output学校里面包含的学院</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"-----------"</span> + getName() + <span class="string">"-----------"</span>);</span><br><span class="line">        <span class="comment">//遍历list</span></span><br><span class="line">        <span class="keyword">for</span> (OrganizationComponent college:colleges) &#123;</span><br><span class="line">            college.print();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//学院，非叶子节点Composite</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">College</span> <span class="keyword">extends</span> <span class="title">OrganizationComponent</span></span>&#123;</span><br><span class="line">    List&lt;OrganizationComponent&gt; departments = <span class="keyword">new</span> LinkedList&lt;OrganizationComponent&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">College</span><span class="params">(String name, String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name, des);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//重写add方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.departments.add(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">remove</span><span class="params">(OrganizationComponent component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.departments.remove(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"--------"</span> + getName() + <span class="string">"--------"</span>);</span><br><span class="line">        <span class="comment">//遍历list</span></span><br><span class="line">        <span class="keyword">for</span> (OrganizationComponent department:departments) &#123;</span><br><span class="line">            department.print();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//系，叶子节点，Leaf</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="keyword">extends</span> <span class="title">OrganizationComponent</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Department</span><span class="params">(String name, String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(name, des);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//不需要重写add，remove，因为这是叶子节点，无需管理其他东西</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        OrganizationComponent university = <span class="keyword">new</span> University(<span class="string">"清华大学"</span>,<span class="string">"This is a university"</span>);</span><br><span class="line"></span><br><span class="line">        OrganizationComponent csCollege = <span class="keyword">new</span> College(<span class="string">"计算机学院"</span>,<span class="string">"计算机学院"</span>);</span><br><span class="line">        OrganizationComponent ieCollege = <span class="keyword">new</span> College(<span class="string">"信息与通信工程学院"</span>,<span class="string">"信息与通信工程学院"</span>);</span><br><span class="line"></span><br><span class="line">        university.add(csCollege);</span><br><span class="line">        university.add(ieCollege);</span><br><span class="line"></span><br><span class="line">        csCollege.add(<span class="keyword">new</span> Department(<span class="string">"计算机科学与技术"</span>,<span class="string">"计算机科学与技术"</span>));</span><br><span class="line">        csCollege.add(<span class="keyword">new</span> Department(<span class="string">"信息安全"</span>,<span class="string">"信息安全"</span>));</span><br><span class="line">        csCollege.add(<span class="keyword">new</span> Department(<span class="string">"软件工程"</span>,<span class="string">"软件工程"</span>));</span><br><span class="line"></span><br><span class="line">        ieCollege.add(<span class="keyword">new</span> Department(<span class="string">"通信工程"</span>,<span class="string">"通信工程"</span>));</span><br><span class="line">        ieCollege.add(<span class="keyword">new</span> Department(<span class="string">"网络工程"</span>,<span class="string">"网络工程"</span>));</span><br><span class="line"></span><br><span class="line">        university.print();</span><br><span class="line">        System.out.println(<span class="string">"show cs college"</span>);<span class="comment">//可以分隔开打印</span></span><br><span class="line">        csCollege.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="组合模式在jdk集合的源码分析">4. 组合模式在JDK集合的源码分析</h2>
+<p>1）Java的集合类-HashMap就使用了组合模式</p>
+<p>做了两层Component：Map是一个接口，有put、putAll等方法，而AbstractMap是一个抽象类默认实现Map的方法，</p>
+<p>HashMap是非叶子节点Composite，重写了方法</p>
+<p>HashMap类中的内部类Node就是叶子节点</p>
+<p>2）代码分析+Debug源码</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129145415082.png" alt="image-20221129145415082" style="zoom:80%;"></p>
+<p>3）类图</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-29-14-image-20221129145807909.png" alt="image-20221129145807909" style="zoom:67%;"></p>
+<h2 id="组合模式的注意事项和细节">5. 组合模式的注意事项和细节</h2>
+<p>1）简化客户端操作。客户端只需要面对一致的对象而不用考虑整体部分或者节点叶子的问题。 2） 具有较强的扩展性。当我们要更改组合对象时，我们只需要调整内部的层次关系，客户端不用做出任何改动(OCP原则) 3） 方便创建出复杂的层次结构。客户端不用理会组合里面的组成细节，容易添加节点或者叶子从而创建出复杂的树形结构 4） 需要遍历组织机构，或者处理的对象具有树形结构时，非常适合使用组合模式 5） 要求较高的抽象性，如果<strong>节点和叶子有很多差异性</strong>的话，比如很多方法和属性都不一样，不适合使用组合模式</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/1942064508/" rel="prev" title="设计模式-装饰者模式">
+      <i class="fa fa-chevron-left"></i> 设计模式-装饰者模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/1868115705/" rel="next" title="设计模式-外观模式">
+      设计模式-外观模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#具体需求"><span class="nav-text">1. 具体需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传统解决方式"><span class="nav-text">2. 传统解决方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合模式解决方式"><span class="nav-text">3. 组合模式解决方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-text">3.1 基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理及角色"><span class="nav-text">3.2 原理及角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用实例"><span class="nav-text">3.3 应用实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合模式在jdk集合的源码分析"><span class="nav-text">4. 组合模式在JDK集合的源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合模式的注意事项和细节"><span class="nav-text">5. 组合模式的注意事项和细节</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.studio/" title="https://qingyou.studio/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.0xfaner.site/" title="https://blog.0xfaner.site/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

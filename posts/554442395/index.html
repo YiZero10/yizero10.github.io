@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍设计模式中的适配器模式（包含类适配器模式、对象适配器模式、接口适配器模式）">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式-适配器模式">
+<meta property="og:url" content="https://yizero10.github.io/posts/554442395/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="本文主要介绍设计模式中的适配器模式（包含类适配器模式、对象适配器模式、接口适配器模式）">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127142902707.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127143648113.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127145528512.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-15-image-20221127150118330.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181638609.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181837791.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181934496.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127182347824.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-21-image-20221127210710631.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127183657533.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127183718370.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-21-image-20221127211725086.png">
+<meta property="og:updated_time" content="2022-11-27T13:49:35.503Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式-适配器模式">
+<meta name="twitter:description" content="本文主要介绍设计模式中的适配器模式（包含类适配器模式、对象适配器模式、接口适配器模式）">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127142902707.png">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/554442395/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>设计模式-适配器模式 | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/554442395/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          设计模式-适配器模式<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/设计模式-适配器模式.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-27 14:21:53" itemprop="dateCreated datePublished" datetime="2022-11-27T14:21:53+08:00">2022-11-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">本文主要介绍设计模式中的适配器模式（包含类适配器模式、对象适配器模式、接口适配器模式）</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="现实生活中的适配器例子">1. 现实生活中的适配器例子</h2>
+<p>泰国插座使用的是两圆孔（欧标），可以买个多功能转换插头（适配器），这样就可以使用了。</p>
+<figure>
+<img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127142902707.png" alt><figcaption>image-20221127142902707</figcaption>
+</figure>
+<h2 id="基本介绍">2. 基本介绍</h2>
+<p>1）适配器模式（Adapter Pattern）将某个类的接口转换成客户端期望的另一个接口表示，主要的目的是兼容性，让原本因接口不匹配不能一起工作的两个类可以协同工作，其别名为包装器（Wrapper）。</p>
+<p>2）适配器模式属于结构型模式</p>
+<p>3）主要分为三类：类适配器模式、对象适配器模式、接口适配器模式</p>
+<h2 id="工作原理">3. 工作原理</h2>
+<p>1）适配器模式：将一个类的接口转换成另一种接口，让原本接口不兼容的类可以兼容</p>
+<p>2）从用户的角度看不到被适配者，是解耦的</p>
+<p>3）用户调用适配器转化出来的目标接口方法，适配器再调用被适配者的相关接口方法</p>
+<p>4）用户收到反馈结果，感觉只是和目标接口交互</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127143648113.png" alt="image-20221127143648113" style="zoom:67%;"></p>
+<h2 id="类适配器模式">4. 类适配器模式</h2>
+<h3 id="类适配器模式介绍">4.1 类适配器模式介绍</h3>
+<p>基本介绍：Adapter类，通过继承src类，实现dst类接口，完成src-&gt;dst的适配</p>
+<h3 id="类适配器模式应用实例">4.2 类适配器模式应用实例</h3>
+<p>1）引用示例说明</p>
+<p>以生活中充电器为例，充电器本身相当于适配器Adapter，220V交流电相当于src（被适配者），我们的dst（目标）是5V直流电</p>
+<p>2）思路分析</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-14-image-20221127145528512.png" alt="image-20221127145528512" style="zoom:67%;"></p>
+<p>3）代码分析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//被适配的类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Voltage220V</span> </span>&#123;</span><br><span class="line">    <span class="comment">//输出220V的电压</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">output220V</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> src = <span class="number">220</span>;</span><br><span class="line">        System.out.println(<span class="string">"电压="</span> + src);</span><br><span class="line">        <span class="keyword">return</span> src;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//适配接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Voltage5V</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">output5V</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//适配类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VoltageAdapter</span> <span class="keyword">extends</span> <span class="title">Voltage220V</span> <span class="keyword">implements</span> <span class="title">Voltage5V</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">output5V</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> src = output220V(); <span class="comment">//获取到原来的220V电压</span></span><br><span class="line">        <span class="keyword">int</span> dst = src / <span class="number">44</span>; <span class="comment">//转成5V</span></span><br><span class="line">        <span class="keyword">return</span> dst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">charging</span><span class="params">(Voltage5V voltage5V)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (voltage5V.output5V() == <span class="number">5</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">"电压是5V，可以充电！"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            System.out.println(<span class="string">"电压不对，无法充电！"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Class Adapter"</span>);</span><br><span class="line">        Phone phone = <span class="keyword">new</span> Phone();</span><br><span class="line">        phone.charging(<span class="keyword">new</span> VoltageAdapter());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="类适配器模式注意事项和细节">4.3 类适配器模式注意事项和细节</h3>
+<p>1） Java 是单继承机制，所以类适配器需要<strong>继承</strong> src 类这一点算是一个缺点，因为这要求 dst 必须是接口，有一定局限性 2）src 类的方法在 Adapter 中都会暴露出来（Adapter中调用了父类src的方法），也增加了使用的成本。 3）由于其继承了src 类，所以它可以根据需求重写 src类的方法，使得 Adapter 的灵活性增强了</p>
+<h2 id="对象适配器模式">5. 对象适配器模式</h2>
+<h3 id="对象适配器模式介绍">5.1 对象适配器模式介绍</h3>
+<p>1）基本思路和类适配器模式相同，只是将Adapter类作了修改，不是继承src类，而是<strong>持有src类的实例</strong>，以解决兼容性问题。即：持有src类，实现dst接口，完成src-&gt;dst的适配</p>
+<p>2）根据<strong>“合成复用”原则</strong>，在系统中尽量使用<strong>关联关系（聚合）</strong>来替代继承关系</p>
+<p>3）对象适配器模式是适配器模式常用的一种</p>
+<h3 id="对象适配器模式应用实例">5.3 对象适配器模式应用实例</h3>
+<p>1）应用实例说明</p>
+<p>以生活中充电器为例，充电器本身相当于适配器Adapter，220V交流电相当于src（被适配者），我们的dst（目标）是5V直流电，使用对象适配器模式</p>
+<p>2）思路分析：只需修改适配器即可，聚合被适配类</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-15-image-20221127150118330.png" alt="image-20221127150118330" style="zoom:67%;"></p>
+<p>3）代码实现</p>
+<ul>
+<li><p>被适配的类和适配接口不需要改变</p></li>
+<li><p>改变适配器类（Adapter类）</p></li>
+<li><p>使用的类（phone）无需变化</p></li>
+<li><p>客户端需要变化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//适配类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VoltageObjectAdapter</span> <span class="keyword">implements</span> <span class="title">Voltage5V</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Voltage220V voltage220V; <span class="comment">//关联关系-》聚合</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//通过构造器传入一个voltage220V实例对象</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">VoltageObjectAdapter</span><span class="params">(Voltage220V voltage220V)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.voltage220V = voltage220V;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">output5V</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> dst = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != voltage220V)&#123;</span><br><span class="line">            <span class="keyword">int</span> src = voltage220V.output220V(); <span class="comment">//获取到原来的220V电压</span></span><br><span class="line">            dst = src / <span class="number">44</span>; <span class="comment">//转成5V</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dst;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Objet Adapter"</span>);</span><br><span class="line">        Phone phone1 = <span class="keyword">new</span> Phone();</span><br><span class="line">        phone1.charging(<span class="keyword">new</span> VoltageObjectAdapter(<span class="keyword">new</span> Voltage220V()));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="对象适配器模式注意事项和细节">5.3 对象适配器模式注意事项和细节</h3>
+<p>1）对象适配器和类适配器其实算是一种思想，只不过实现方式不同。根据合成复用原则，使用组合代替继承，所以它解决了类适配器必须继承src类的局限性问题，也不再要求dst必须是接口。</p>
+<p>2）使用成本更低，更灵活。</p>
+<h2 id="接口适配器模式">6. 接口适配器模式</h2>
+<h3 id="接口适配器模式介绍">6.1 接口适配器模式介绍</h3>
+<p>1）一些书籍称为：适配器模式（Default Adapter Pattern）或缺省适配器模式。</p>
+<p>2）核心思路：当不需要全部实现接口提供的方法时，可先设计一个抽象类实现接口，并为该接口中每一个方法提供一个默认实现（空方法），那么该抽象类的子类可有选择地覆盖父类的某些方法来实现需求。</p>
+<p>3）适用于一个接口不想使用其所有的方法的情况。</p>
+<h3 id="接口适配器模式应用实例">6.3 接口适配器模式应用实例</h3>
+<p>1）Android中的属性动画ValueAnimator类可以通过addListen（AnimatorListener listener）方法添加监听器，那么常规写法如右图</p>
+<p>2）有时候我们不想实现Animator.AnimatorListener接口的全部方法，我们只想监听onAnimationStart，我们写如左图一样选择性写</p>
+<figure>
+<img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181638609.png" alt><figcaption>image-20221127181638609</figcaption>
+</figure>
+<p>3）AnimatorListenerAdapter类，就是一个接口适配器，代码如右图：它空实现了Animator.AnimatorListener(src)的所有方法</p>
+<p>4）而AnimatorListener是一个接口，如左图</p>
+<figure>
+<img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181837791.png" alt><figcaption>image-20221127181837791</figcaption>
+</figure>
+<p>5）程序里的匿名内部类就是Listener具体实现类，只重写了其中关心的方法</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127181934496.png" alt="image-20221127181934496" style="zoom:67%;"></p>
+<p>6）案例说明</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127182347824.png" alt="image-20221127182347824" style="zoom:67%;"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Interface4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">m1</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">m2</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">m3</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">m4</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在Adapter中，将Interface4中的所有方法默认实现</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AbsAdapter</span> <span class="keyword">implements</span> <span class="title">Interface4</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m4</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        AbsAdapter absAdapter = <span class="keyword">new</span> AbsAdapter()&#123;</span><br><span class="line">            <span class="comment">//只需要去覆盖我们要使用的方法就好</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m2</span><span class="params">()</span></span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"使用m2"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        absAdapter.m2();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="适配器模式在springmvc框架应用的源码分析">7. 适配器模式在SpringMVC框架应用的源码分析</h2>
+<p>1）SpringMVC中的HandlerAdapter就使用了适配器模式</p>
+<p>2）SpringMVC处理请求的流程回顾</p>
+<p>3）使用HandlerAdapter的原因分析：可以看到处理器的类型不同，有多重实现方式，那么调用方式就不是确定的，如果需要直接调用Controller方法，需要调用的时候就得不断使用if else来进行判断是哪一种子类然后执行。那么如果后面要扩展Controller，就得修改原来的代码，这样就违背了OCP原则</p>
+<p>4）代码分析+Debug源码</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-21-image-20221127210710631.png" alt="image-20221127210710631" style="zoom:80%;"></p>
+<p>5）动手写SpringMVC通过适配器设计模式获取到对应的Controller的源码</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127183657533.png" alt="image-20221127183657533" style="zoom: 80%;"><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-18-image-20221127183718370.png" alt="image-20221127183718370"></p>
+<p>DispatchServlet组合了所有Adapter，通过doDispatch来调用</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-27-21-image-20221127211725086.png" alt="image-20221127211725086" style="zoom:67%;"></p>
+<h2 id="适配器模式的注意事项和细节">8. 适配器模式的注意事项和细节</h2>
+<p>1）三种命名方式是根据src是以怎样的形式给到Adapter（在Adapter里的形式）来命名的。</p>
+<p>2）三种适配器</p>
+<ul>
+<li>类适配器：以类给到，在Adapter里就是将src当作类，继承</li>
+<li>对象适配器：以对象给到，在Adapter里就是将src作为一个对象，持有（聚合关系）</li>
+<li>接口适配器：以接口给到，在Adapter里就是将src作为一个接口，实现</li>
+</ul>
+<p>3）Adapter模式最大的作用还是将原本不兼容的接口融合在一起工作</p>
+<p>4）实际开发中，实现起来不拘泥于这三种经典形式，还有更多的形式</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/709379917/" rel="prev" title="设计模式-建造者模式">
+      <i class="fa fa-chevron-left"></i> 设计模式-建造者模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/1942064508/" rel="next" title="设计模式-装饰者模式">
+      设计模式-装饰者模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#现实生活中的适配器例子"><span class="nav-text">1. 现实生活中的适配器例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本介绍"><span class="nav-text">2. 基本介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作原理"><span class="nav-text">3. 工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类适配器模式"><span class="nav-text">4. 类适配器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类适配器模式介绍"><span class="nav-text">4.1 类适配器模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类适配器模式应用实例"><span class="nav-text">4.2 类适配器模式应用实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类适配器模式注意事项和细节"><span class="nav-text">4.3 类适配器模式注意事项和细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象适配器模式"><span class="nav-text">5. 对象适配器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对象适配器模式介绍"><span class="nav-text">5.1 对象适配器模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象适配器模式应用实例"><span class="nav-text">5.3 对象适配器模式应用实例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象适配器模式注意事项和细节"><span class="nav-text">5.3 对象适配器模式注意事项和细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口适配器模式"><span class="nav-text">6. 接口适配器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#接口适配器模式介绍"><span class="nav-text">6.1 接口适配器模式介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口适配器模式应用实例"><span class="nav-text">6.3 接口适配器模式应用实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#适配器模式在springmvc框架应用的源码分析"><span class="nav-text">7. 适配器模式在SpringMVC框架应用的源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#适配器模式的注意事项和细节"><span class="nav-text">8. 适配器模式的注意事项和细节</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.studio/" title="https://qingyou.studio/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.0xfaner.site/" title="https://blog.0xfaner.site/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

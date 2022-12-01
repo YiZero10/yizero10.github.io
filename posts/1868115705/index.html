@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍设计模式中的外观模式">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式-外观模式">
+<meta property="og:url" content="https://yizero10.github.io/posts/1868115705/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="本文主要介绍设计模式中的外观模式">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-15-image-20221130155426413.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-16-image-20221130163249678.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-17-image-20221130171119029.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-17-image-20221130172139575.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-20-image-20221130203322443.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-20-image-20221130202112235.png">
+<meta property="og:updated_time" content="2022-11-30T12:35:58.207Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式-外观模式">
+<meta name="twitter:description" content="本文主要介绍设计模式中的外观模式">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-15-image-20221130155426413.png">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/1868115705/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>设计模式-外观模式 | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/1868115705/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          设计模式-外观模式<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/设计模式-外观模式.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-29 12:29:34" itemprop="dateCreated datePublished" datetime="2022-11-29T12:29:34+08:00">2022-11-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">本文主要介绍设计模式中的外观模式</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="具体需求">1. 具体需求</h2>
+<p>组建一个家庭影院：</p>
+<p>DVD播放器、投影仪、自动屏幕、环绕立体声、爆米花机，要求完成使用家庭影院的功能，其过程为：</p>
+<p>直接用遥控统筹各设备开关：</p>
+<ul>
+<li>开爆米花机</li>
+<li>降下屏幕</li>
+<li>开投影仪</li>
+<li>开音响</li>
+<li>开DVD，选DVD</li>
+<li>拿爆米花</li>
+<li>调暗灯光</li>
+<li>播放</li>
+<li>观影结束后，关掉各种设备</li>
+</ul>
+<h2 id="传统解决方式">2. 传统解决方式</h2>
+<h3 id="类图">2.1 类图</h3>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-15-image-20221130155426413.png" alt="image-20221130155426413" style="zoom:80%;"></p>
+<h3 id="问题分析">2.2 问题分析</h3>
+<ol type="1">
+<li>在ClientTest类的main方法中，创建各个子系统的对象，并直接去调用子系统（对象）相关方法，会造成调用过程混乱，没有清晰的过程。</li>
+<li>不利于在ClientTest类中去维护对子系统的操作</li>
+</ol>
+<h3 id="解决思路">2.3 解决思路</h3>
+<p>定义一个高层接口，给子系统中的一组接口提供一个一致的界面（比如在高层接口提供四个方法ready、play、pause、end），用来访问子系统中的一群接口。</p>
+<p>也就是说：通过定义一个一致的接口（界面类），用以屏蔽内部子系统的细节，使得调用端只需跟这个接口发生调用，而无需关系这个子系统的内部细节——&gt;<strong>外观模式</strong>。</p>
+<h2 id="外观模式">3. 外观模式</h2>
+<h3 id="基本介绍">3.1 基本介绍</h3>
+<p>1）外观模式（Facade），也叫“过程模式”，外观模式为子系统中的一组接口提供一个一致的界面，此模式定义了一个高层接口，这个接口使得这一子系统更加容易使用。</p>
+<p>2）外观模式通过定义一个一致的接口，用以<strong>屏蔽内部子系统的细节</strong>，使得调用端只需跟这个接口发生调用，而无需关心这个子系统的内部细节</p>
+<h3 id="原理类图">3.2 原理类图</h3>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-16-image-20221130163249678.png" alt="image-20221130163249678" style="zoom:67%;"></p>
+<h3 id="角色分析">3.3 角色分析</h3>
+<p>1）外观类（Facade）：聚合子系统，为调用端提供统一的调用接口，外观类知道哪些子系统负责处理请求，从而将调用端的请求代理给适当子系统对象。</p>
+<p>2）调用者（Client）：外观接口的调用者。</p>
+<p>3）子系统的集合：指模块或者子系统，处理Facade，对象指派的任务，它是功能的实际提供者。</p>
+<h2 id="外观模式解决方式">4. 外观模式解决方式</h2>
+<h3 id="传统方式解决方式说明">4.1 传统方式解决方式说明</h3>
+<p>1）外观模式可以理解为转换一群接口，客户只要调用一个接口，而不用调用多个接口才能达到目的。比如：在pc上安装软件的时候经常有一键安装选项（省去选择安装目录、安装的组件等等），还有就是手机的重启功能（把关机和启动合为一个操作）。</p>
+<p>2）外观模式就是解决多个复杂接口带来的使用困难，起到简化用户操作的作用</p>
+<p>3）示意图</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-17-image-20221130171119029.png" alt="image-20221130171119029" style="zoom:67%;"></p>
+<h3 id="外观模式实例">4.2 外观模式实例</h3>
+<p>1）使用外观模式完成家庭影院项目</p>
+<p>2）思路分析和图解（类图）</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-17-image-20221130172139575.png" alt="image-20221130172139575" style="zoom:67%;"></p>
+<p>3）代码示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//子系统</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DVDPlayer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用单例模式（饿汉式）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DVDPlayer instance = <span class="keyword">new</span> DVDPlayer();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DVDPlayer <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">on</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"DVD on……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">off</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"DVD off……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pause</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"DVD pause……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"DVD play……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Popcorn</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用单例模式（饿汉式）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Popcorn instance = <span class="keyword">new</span> Popcorn();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Popcorn <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">on</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Popcorn on……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">off</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Popcorn off……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pop</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Popcorn pop……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Projector</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用单例模式（饿汉式）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Projector instance = <span class="keyword">new</span> Projector();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Projector <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">on</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Projector on……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">off</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Projector off……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">focus</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Projector focus……"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Screen、Stereo、ThreatLight……</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//facade类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HomeTheaterFacade</span> </span>&#123;</span><br><span class="line">    <span class="comment">//定义各个子系统对象</span></span><br><span class="line">    <span class="keyword">private</span> TheaterLight light;</span><br><span class="line">    <span class="keyword">private</span> Popcorn popcorn;</span><br><span class="line">    <span class="keyword">private</span> Stereo stereo;</span><br><span class="line">    <span class="keyword">private</span> Projector projector;</span><br><span class="line">    <span class="keyword">private</span> Screen screen;</span><br><span class="line">    <span class="keyword">private</span> DVDPlayer dvdPlayer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造器</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HomeTheaterFacade</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        light = TheaterLight.getInstance();</span><br><span class="line">        popcorn = Popcorn.getInstance();</span><br><span class="line">        stereo = Stereo.getInstance();</span><br><span class="line">        projector = Projector.getInstance();</span><br><span class="line">        screen = Screen.getInstance();</span><br><span class="line">        dvdPlayer = DVDPlayer.getInstance();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//操作分成四步</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ready</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        popcorn.on();<span class="comment">//打开爆米花机</span></span><br><span class="line">        popcorn.pop();<span class="comment">//开始炸爆米花</span></span><br><span class="line">        screen.down();<span class="comment">//降下屏幕</span></span><br><span class="line">        projector.on();<span class="comment">//打开投影</span></span><br><span class="line">        stereo.on();<span class="comment">//打开立体声</span></span><br><span class="line">        dvdPlayer.on();<span class="comment">//打开DVD</span></span><br><span class="line">        light.dim();<span class="comment">//灯光调暗</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        dvdPlayer.play();<span class="comment">//播放DVD</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        dvdPlayer.pause();<span class="comment">//暂停DVD</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        popcorn.off();<span class="comment">//关闭爆米花</span></span><br><span class="line">        light.bright();<span class="comment">//灯光调亮</span></span><br><span class="line">        screen.up();<span class="comment">//收起屏幕</span></span><br><span class="line">        projector.off();<span class="comment">//关闭投影</span></span><br><span class="line">        stereo.off();<span class="comment">//关闭立体声</span></span><br><span class="line">        dvdPlayer.off();<span class="comment">//关闭DVD</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//客户端</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//直接调用各个子系统，很繁琐麻烦</span></span><br><span class="line">        <span class="comment">//使用facade统一调用</span></span><br><span class="line">        HomeTheaterFacade facade = <span class="keyword">new</span> HomeTheaterFacade();</span><br><span class="line">        facade.ready();</span><br><span class="line">        facade.play();</span><br><span class="line">        facade.end();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="外观模式在mybatis框架应用的源码分析">5. 外观模式在MyBatis框架应用的源码分析</h2>
+<p>1）MyBatis中的Configuration去创建MetaObject对象使用到了外观模式</p>
+<p>2）代码分析+Debug源码+示意图</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-20-image-20221130203322443.png" alt="image-20221130203322443" style="zoom:80%;"></p>
+<p>3）对源码中使用到的外观模式的角色类图</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-30-20-image-20221130202112235.png" alt="image-20221130202112235" style="zoom:67%;"></p>
+<h2 id="外观模式的注意事项和细节">6. 外观模式的注意事项和细节</h2>
+<p>1） 外观模式对外屏蔽了子系统的细节，因此外观模式降低了客户端对子系统使用的复杂性 2） 外观模式对客户端与子系统的轉合关系 - 解轉，让子系统内部的模块更易维护和扩展 3） 通过合理的使用外观模式，可以帮我们更好的划分访问的层次 4） 当系统需要进行分层设计时，可以考虑使用 Facade 模式 5） 在维护一个遗留的大型系统时，可能这个系统己经变得非常难以维护和扩展，此时可以考虑为新系统开发一个Facade 类，来提供遗留系统的比较清晰简单的接口，让新系统与 Facade 类交互，提高复用性 6）不能过多的或者不合理的使用外观模式，使用外观模式好，还是直接调用模块好。要以让系统有层次，利于维护为目的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/1191195587/" rel="prev" title="设计模式-组合模式">
+      <i class="fa fa-chevron-left"></i> 设计模式-组合模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/2031750427/" rel="next" title="设计模式-享元模式">
+      设计模式-享元模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#具体需求"><span class="nav-text">1. 具体需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传统解决方式"><span class="nav-text">2. 传统解决方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类图"><span class="nav-text">2.1 类图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题分析"><span class="nav-text">2.2 问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决思路"><span class="nav-text">2.3 解决思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外观模式"><span class="nav-text">3. 外观模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-text">3.1 基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理类图"><span class="nav-text">3.2 原理类图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#角色分析"><span class="nav-text">3.3 角色分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外观模式解决方式"><span class="nav-text">4. 外观模式解决方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统方式解决方式说明"><span class="nav-text">4.1 传统方式解决方式说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外观模式实例"><span class="nav-text">4.2 外观模式实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外观模式在mybatis框架应用的源码分析"><span class="nav-text">5. 外观模式在MyBatis框架应用的源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外观模式的注意事项和细节"><span class="nav-text">6. 外观模式的注意事项和细节</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.studio/" title="https://qingyou.studio/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.0xfaner.site/" title="https://blog.0xfaner.site/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

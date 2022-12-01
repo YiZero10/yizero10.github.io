@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon-32x32-null.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-null.png">
+
+<link rel="stylesheet" href="/css/main.css">
+<script>
+    (function () {
+        if ('') {
+            if (prompt('请输入文章密码') !== '') {
+                alert('密码错误！');
+                if (history.length === 1) {
+                    location.replace("https://yiling.xyz"); // 这里替换成你的首页
+                } else {
+                    history.back();
+                }
+            }
+        }
+    })();
+</script>
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yizero10.github.io","root":"/","scheme":"Pisces","version":"7.7.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文主要介绍设计模式中的装饰者模式">
+<meta name="keywords" content="设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式-装饰者模式">
+<meta property="og:url" content="https://yizero10.github.io/posts/1942064508/index.html">
+<meta property="og:site_name" content="Elaine&#39;s Blog">
+<meta property="og:description" content="本文主要介绍设计模式中的装饰者模式">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128201500855.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128201852231.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128202831429.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128203239042.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128203621884.png">
+<meta property="og:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-21-image-20221128210920607.png">
+<meta property="og:updated_time" content="2022-11-28T13:58:03.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式-装饰者模式">
+<meta name="twitter:description" content="本文主要介绍设计模式中的装饰者模式">
+<meta name="twitter:image" content="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128201500855.png">
+
+<link rel="canonical" href="https://yizero10.github.io/posts/1942064508/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>设计模式-装饰者模式 | Elaine's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Elaine's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Elaine's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Do it while we can do</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://yizero10.github.io/posts/1942064508/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tree_small.png">
+      <meta itemprop="name" content="Elaine Huang">
+      <meta itemprop="description" content="Life is like a see of bitterness.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Elaine's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          设计模式-装饰者模式<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/设计模式-装饰者模式.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-11-27 21:37:18" itemprop="dateCreated datePublished" datetime="2022-11-27T21:37:18+08:00">2022-11-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">本文主要介绍设计模式中的装饰者模式</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="具体需求">1. 具体需求</h2>
+<p>星巴克咖啡订单项目（咖啡馆）：</p>
+<p>1）咖啡种类/单品咖啡：Espresso（意大利浓咖啡）、ShortBlack、LongBlack（美式咖啡）、Decaf（无因咖啡）</p>
+<p>2）调料：Milk、Soy（豆浆）、Chocolate</p>
+<p>3）要求在扩展新的咖啡种类时，具有良好的扩展性、改动方便、维护方便</p>
+<p>4）使用OO的来计算不同种类咖啡的费用：客户可以单点咖啡+调料组合（美式+2份Chocolate）</p>
+<h2 id="解决方案1">2. 解决方案1</h2>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128201500855.png" alt="image-20221128201500855" style="zoom:67%;"></p>
+<p>问题分析：</p>
+<p>1）Drink是一个抽象类，表示饮料</p>
+<p>2）des就是对咖啡的描述，比如咖啡的名字</p>
+<p>3）cost()方法就是计算费用，Drink类中做成一个抽象方法</p>
+<p>4）Decaf就是单品咖啡，继承Drink，并实现cost，其他的单品一次类推</p>
+<p>5）Express&amp;&amp;Milk就是单品咖啡+调料，这个组合很多</p>
+<p>6）问题：这样设计，就会有很多类，当我们增加一个单品咖啡，或者一个新的调料，类的数量就会倍增，就会出现<strong>类爆炸</strong>。</p>
+<h2 id="解决方案2">3. 解决方案2</h2>
+<p>1）前面分析到方案1因为单品咖啡+调料组合会造成类的倍增，因此可以做改进，将调料内置到Drink类，这样就不会造成类数量过多，从而提高项目的维护性（如图）</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128201852231.png" alt="image-20221128201852231" style="zoom:80%;"></p>
+<ul>
+<li>说明：milk、soy、chocolate可以设计为Boolean，表示是否要添加相应的调料</li>
+</ul>
+<p>2）问题分析</p>
+<ul>
+<li>方案2可以控制类的数量，不至于造成很多的类</li>
+<li>在增加或删除调料种类时，修改的地方多，代码的维护量很大</li>
+<li>考虑到用户可以添加多份调料时，可以将hasMilk返回一个对应数量int</li>
+<li>考虑使用<strong>装饰者模式</strong></li>
+</ul>
+<h2 id="装饰者模式">4. 装饰者模式</h2>
+<h3 id="基本介绍">4.1 基本介绍</h3>
+<p>1）装饰者模式：<strong>动态的将新功能附加到对象上</strong>。在对象功能扩展方面，它比继承更有弹性，装饰者模式也体现了开闭原则(ocp)。 2） 这里提到的动态的将新功能附加到对象和ocp 原则，在后面的应用实例上会以代码的形式体现，请注意体会。</p>
+<h3 id="原理">4.2 原理</h3>
+<p>装饰者模式就像打包一个快递 主体：比如：陶瓷、衣服(Component)//被装饰者 包装：比如：报纸填充、塑料泡沫、纸板、木板//Decorator装饰者 1）Component： 主体，比如类似前面的 Drink 2）ConcreteComponent：具体的主体，比如前面的各个单品咖啡 3）Decorator：装饰者，比如各调料 在如图的 Component 与 ConereteComponent 之间，如果 ConcreteComponent 类很多,还可以设计一个缓冲层，将共有的部分提取出来，抽象成一个类。</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128202831429.png" alt="image-20221128202831429" style="zoom:80%;"></p>
+<h2 id="装饰者模式解决方案">5. 装饰者模式解决方案</h2>
+<ol type="1">
+<li>设计方案</li>
+</ol>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128203239042.png" alt="image-20221128203239042" style="zoom:80%;"></p>
+<p>说明：</p>
+<ul>
+<li>Drink类就是前面说的抽象类，Component</li>
+<li>Coffee缓冲类，继承了Drink</li>
+<li>ShortBlack就是单品咖啡，ConcreteComponent，继承Component</li>
+<li>Decorator是一个装饰类，含有一个被装饰的对象（Drink obj）</li>
+<li>Decorator的cost方法，进行一个费用的叠加计算，递归的计算价格</li>
+<li>Chocolate就是一个具体的装饰类，装饰者，继承Decorator，重写cost方法</li>
+</ul>
+<ol start="2" type="1">
+<li><p>装饰者模式下的订单：2份巧克力+一份牛奶的LongBlack</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-20-image-20221128203621884.png" alt="image-20221128203621884" style="zoom:50%;"></p>
+<p>说明：</p>
+<ul>
+<li>Milk包含了LongBlack</li>
+<li>一份Chocolate包含了（Milk+LongBlack）</li>
+<li>一份Chocolate包含了（Chocolate+Milk+LongBlack）</li>
+<li>这样不管是什么形式的单品咖啡+调料组合，通过递归方式（包裹再包裹）可以方便的组合和维护</li>
+</ul></li>
+<li><p>代码示例</p></li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Drink</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String des; <span class="comment">// 描述</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> price = <span class="number">0.0f</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> des;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDes</span><span class="params">(String des)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.des = des;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">getPrice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> price;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPrice</span><span class="params">(<span class="keyword">float</span> price)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.price = price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//计算费用的抽象方法</span></span><br><span class="line">    <span class="comment">//由子类来实现</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">float</span> <span class="title">cost</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Component和ConcreteComponent之间的缓冲类</span></span><br><span class="line"><span class="comment">//将ConcreteComponent共同的部分抽出来</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Coffee</span> <span class="keyword">extends</span> <span class="title">Drink</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getPrice();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ConcreteComponent</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Espresso</span> <span class="keyword">extends</span> <span class="title">Coffee</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Espresso</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setDes(<span class="string">"意大利咖啡"</span>);</span><br><span class="line">        setPrice(<span class="number">6.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//ConcreteComponent</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongBlack</span> <span class="keyword">extends</span> <span class="title">Coffee</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LongBlack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setDes(<span class="string">"美式咖啡"</span>);</span><br><span class="line">        setPrice(<span class="number">5.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//ConcreteComponent</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShortBlack</span> <span class="keyword">extends</span> <span class="title">Coffee</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ShortBlack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setDes(<span class="string">"short black"</span>);</span><br><span class="line">        setPrice(<span class="number">4.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//ConcreteComponent</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decaf</span> <span class="keyword">extends</span> <span class="title">Coffee</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decaf</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        setDes(<span class="string">"无因咖啡"</span>);</span><br><span class="line">        setPrice(<span class="number">8.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Decorator</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">extends</span> <span class="title">Drink</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Drink obj;<span class="comment">//被装饰者</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//组合关系</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Drink obj)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.obj = obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//自己的价格+饮料的价格</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getPrice() + obj.cost();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.getDes() + <span class="string">" "</span> + <span class="keyword">super</span>.getPrice() + <span class="string">" &amp;&amp; "</span> + obj.getDes();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ConcreteDecorator</span></span><br><span class="line"><span class="comment">//具体的Decorator，这里就是调味品</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Chocolate</span> <span class="keyword">extends</span> <span class="title">Decorator</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Chocolate</span><span class="params">(Drink obj)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(obj);</span><br><span class="line">        setDes(<span class="string">"巧克力"</span>);</span><br><span class="line">        setPrice(<span class="number">3.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Milk</span> <span class="keyword">extends</span> <span class="title">Decorator</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Milk</span><span class="params">(Drink obj)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(obj);</span><br><span class="line">        setDes(<span class="string">"牛奶"</span>);</span><br><span class="line">        setPrice(<span class="number">2.0f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Soy</span> <span class="keyword">extends</span> <span class="title">Decorator</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Soy</span><span class="params">(Drink obj)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(obj);</span><br><span class="line">        setDes(<span class="string">"豆浆"</span>);</span><br><span class="line">        setPrice(<span class="number">1.5f</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//TestClient</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CoffeeBar</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//1. 点一份LongBlack</span></span><br><span class="line">        Drink order = <span class="keyword">new</span> LongBlack();</span><br><span class="line">        System.out.print(<span class="string">"fee1: "</span> + order.cost());</span><br><span class="line">        System.out.println(<span class="string">" des1: "</span> + order.getDes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2. 加一份牛奶</span></span><br><span class="line">        order = <span class="keyword">new</span> Milk(order);</span><br><span class="line">        System.out.print(<span class="string">"fee2: "</span> + order.cost());</span><br><span class="line">        System.out.println(<span class="string">" des2: "</span> + order.getDes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3. 加一份巧克力</span></span><br><span class="line">        order = <span class="keyword">new</span> Chocolate(order);</span><br><span class="line">        System.out.print(<span class="string">"fee3: "</span> + order.cost());</span><br><span class="line">        System.out.println(<span class="string">" des3: "</span> + order.getDes());</span><br><span class="line"></span><br><span class="line">        <span class="comment">//4. 加一份巧克力</span></span><br><span class="line">        order = <span class="keyword">new</span> Chocolate(order);</span><br><span class="line">        System.out.print(<span class="string">"fee4: "</span> + order.cost());</span><br><span class="line">        System.out.println(<span class="string">" des4: "</span> + order.getDes());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="装饰者模式在jdk应用的源码分析">6. 装饰者模式在JDK应用的源码分析</h2>
+<p>Java的IO结构，FilterInputStream就是一个装饰者</p>
+<p><img src="https://zero-pic-bed.oss-cn-shanghai.aliyuncs.com/uPic/11-28-21-image-20221128210920607.png" alt="image-20221128210920607" style="zoom:80%;"></p>
+<ul>
+<li>InputStream是一个抽象类，Component，类比Drink</li>
+<li>FileInputStream、StringBufferInputStream、ByteArrayInputStream……是InputStream的子类，是具体的Component，类比Decaf</li>
+<li>FilterInputStream是InputStream的另一个子类，是一个装饰者Decorator，里面有一个InputStream</li>
+<li>BufferInputStream、DataInputStream、LineNumberInputStream是具体的Decorator</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/设计模式/" rel="tag"><i class="fa fa-tag"></i> 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/554442395/" rel="prev" title="设计模式-适配器模式">
+      <i class="fa fa-chevron-left"></i> 设计模式-适配器模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/1191195587/" rel="next" title="设计模式-组合模式">
+      设计模式-组合模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#具体需求"><span class="nav-text">1. 具体需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案1"><span class="nav-text">2. 解决方案1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案2"><span class="nav-text">3. 解决方案2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#装饰者模式"><span class="nav-text">4. 装饰者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-text">4.1 基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-text">4.2 原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#装饰者模式解决方案"><span class="nav-text">5. 装饰者模式解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#装饰者模式在jdk应用的源码分析"><span class="nav-text">6. 装饰者模式在JDK应用的源码分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Elaine Huang"
+      src="/images/tree_small.png">
+  <p class="site-author-name" itemprop="name">Elaine Huang</p>
+  <div class="site-description" itemprop="description">Life is like a see of bitterness.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/YiZero10" title="GitHub → https://github.com/YiZero10" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yiling_0210@163.com" title="E-Mail → mailto:yiling_0210@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Friends
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://qingyou.studio/" title="https://qingyou.studio/" rel="noopener" target="_blank">QingYou Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cfy73.github.io/" title="https://cfy73.github.io/" rel="noopener" target="_blank">feiyang</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.0xfaner.site/" title="https://blog.0xfaner.site/" rel="noopener" target="_blank">0xfaner</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yiayaz.top/" title="https://yiayaz.top/" rel="noopener" target="_blank">Yiayaz</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://ChenKS12138.github.io/" title="https://ChenKS12138.github.io/" rel="noopener" target="_blank">ChenKS</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://whz11.github.io/" title="https://whz11.github.io/" rel="noopener" target="_blank">whz11</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lenjon.top/" title="https://lenjon.top/" rel="noopener" target="_blank">lenjon</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://sun482.github.io/" title="https://sun482.github.io/" rel="noopener" target="_blank">sun482</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://lakphy.me/" title="https://lakphy.me/" rel="noopener" target="_blank">Lakphy</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+  <div class="beian"><a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">闽ICP备2021011069号 </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Elaine Huang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
